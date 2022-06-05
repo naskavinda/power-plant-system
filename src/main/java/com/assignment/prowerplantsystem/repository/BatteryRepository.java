@@ -13,4 +13,7 @@ public interface BatteryRepository extends JpaRepository<Battery, Integer> {
 
     @Query(value = "SELECT b FROM Battery b WHERE b.name IN (:names)")
     List<Battery> findBatteriesByNameList(@Param("names") List<String> names);
+
+    @Query(value = "SELECT b FROM Battery b WHERE b.postcode BETWEEN :from AND :to")
+    List<Battery> findBatteriesByPostcodeRage(@Param("from") String from, @Param("to") String to);
 }

@@ -1,6 +1,8 @@
 package com.assignment.prowerplantsystem.service.impl;
 
 import com.assignment.prowerplantsystem.dto.BatteryDTO;
+import com.assignment.prowerplantsystem.dto.BatteryWithReturnDetailsDTO;
+import com.assignment.prowerplantsystem.dto.ReturnBatteryDTO;
 import com.assignment.prowerplantsystem.entity.Battery;
 import com.assignment.prowerplantsystem.repository.BatteryRepository;
 import com.assignment.prowerplantsystem.service.BatteryService;
@@ -9,6 +11,7 @@ import com.assignment.prowerplantsystem.util.ResponseDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +25,7 @@ public class BatteryServiceImpl implements BatteryService {
         this.batteryRepository = batteryRepository;
     }
 
+    @Override
     public Response<List<BatteryDTO>> saveBatteries(List<BatteryDTO> batteryDTOS) {
         Set<String> names = batteryDTOS.stream().map(BatteryDTO::getName).collect(Collectors.toSet());
         if (!isContainDuplicateRecords(batteryDTOS, names)) {
@@ -64,5 +68,33 @@ public class BatteryServiceImpl implements BatteryService {
                 .postcode(batteryDTO.getPostcode())
                 .capacity(batteryDTO.getCapacity())
                 .build();
+    }
+
+    @Override
+    public List<BatteryWithReturnDetailsDTO> getBatteryWithReturnDetails(String from, String to) {
+        List<Battery> batteries = batteryRepository.findBatteriesByPostcodeRage(from, to);
+        return batteries.stream().
+                sorted(Comparator.comparing(Battery::getName).thenComparing(Battery::getName))
+                .map(this::mapToBatteryWithReturnDetails)
+                .toList();
+    }
+
+    private BatteryWithReturnDetailsDTO mapToBatteryWithReturnDetails(Battery battery) {
+       return BatteryWithReturnDetailsDTO.builder()
+                .name(battery.getName())
+                .postcode(battery.getPostcode())
+                .capacity(battery.getCapacity())
+                .returnBattery(mapToReturnBatteryDTO(battery))
+                .build();
+    }
+
+    private ReturnBatteryDTO mapToReturnBatteryDTO(Battery battery) {
+        if (battery.getReturnBattery()!= null) {
+            return ReturnBatteryDTO.builder()
+                    .averageCapacity(battery.getReturnBattery().getAverageCapacity())
+                    .totalCapacity(battery.getReturnBattery().getTotalCapacity())
+                    .build();
+        }
+        return null;
     }
 }
