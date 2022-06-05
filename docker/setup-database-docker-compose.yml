@@ -6,16 +6,14 @@ services:
     #    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: xu01UwGh@5x&
-      MYSQL_USER: user
-      MYSQL_PASSWORD: t*Hjp!YXmmAr
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-ppt-data:/var/lib/mysql
     ports:
       - 3307:3306
     networks:
       - pps_network
 volumes:
-  mysql-data:
+  mysql-ppt-data:
     driver: local
 networks:
   pps_network:
