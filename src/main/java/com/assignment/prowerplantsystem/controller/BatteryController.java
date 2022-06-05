@@ -2,6 +2,7 @@ package com.assignment.prowerplantsystem.controller;
 
 import com.assignment.prowerplantsystem.dto.BatteryDTO;
 import com.assignment.prowerplantsystem.service.impl.BatteryServiceImpl;
+import com.assignment.prowerplantsystem.util.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +22,9 @@ public class BatteryController {
     }
 
     @PostMapping()
-    public ResponseEntity<Boolean> saveBatteries(@RequestBody List<BatteryDTO> batteryDTOs) {
-        try {
-            Boolean isSaved = batteryService.saveBatteries(batteryDTOs);
-            return ResponseEntity.ok(isSaved);
-        } catch (Exception e) {
-            return ResponseEntity.ok(false);
-        }
+    public ResponseEntity<Response<List<BatteryDTO>>> saveBatteries(@RequestBody List<BatteryDTO> batteryDTOs) {
+
+        Response<List<BatteryDTO>> response = batteryService.saveBatteries(batteryDTOs);
+        return ResponseEntity.ok(response);
     }
 }
