@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  pps-mysql:
+    container_name: pps-mysql
+    image: mysql:8.0.26
+    #    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: xu01UwGh@5x&
+      MYSQL_USER: user
+      MYSQL_PASSWORD: t*Hjp!YXmmAr
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - 3307:3306
+    networks:
+      - pps_network
+volumes:
+  mysql-data:
+    driver: local
+networks:
+  pps_network:
